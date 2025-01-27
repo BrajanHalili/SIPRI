@@ -24,7 +24,7 @@ You may also see any lint errors in the console.
 * What was the inspiration for the project?
   * The SIPRI Arms Trade Website idea was inspired after trying to check certain data in the [SIPRI Arms Trade Registers](https://armstransfers.sipri.org/ArmsTransfer/TransferRegister) website. There is an option to download data as csv, which is not very useful without parsing it, and also an option to view on screen. However, this option is unsorted and not very useful to check certain armament categories or sort by order year.
   * Here is a view of that screen:
-<img src='./Gifs and photos/SIPRI Website Screenshot.png' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='./Frontend/Gifs and photos/SIPRI Website Screenshot.png' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 * .env file
   * Enter your data for the PostgreSQL in the .env file.
