@@ -53,3 +53,21 @@
   text-align: center;
   position:sticky;
 }
+
+.sort-button{
+  margin-top: 10px;
+  position: absolute;
+  right: 0px;
+  font-size:medium;
+}
+
+.sortForm {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.selectSortForm {
+  margin-left: 5px;
+
+}

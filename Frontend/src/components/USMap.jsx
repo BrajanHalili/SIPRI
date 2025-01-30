@@ -26,6 +26,15 @@ const USMap = () => {
       [85, 180] // Northeast corner of the world (latitude, longitude)
     ];
     const [tradeData, setTradeData] = useState();
+    const [idCounter, setIDCounter] = useState(2);
+    const [sortOrder, setSortOrder] = useState([
+      {
+        id: 1,
+        Category: "order_year", 
+        Order_Type: "DESC"
+      }
+    ]);
+    const [sortIsVisible, setSortIsVisible] = useState(false)
 
   const position = [51.505, -0.09]; // Example coordinates for the map center
   const countryStyle = {
@@ -175,6 +184,98 @@ const USMap = () => {
       }
     };
 
+    const sortButton = () => {
+        setSortIsVisible(!sortIsVisible);
+    }
+
+    const handleSortChange = (event, index) => {
+      const {value} = event.target;
+      console.log('Before update:', sortOrder);
+
+      setSortOrder((prevOrder) =>
+        prevOrder.map((category, i) =>
+          i === index ? { ...category, Category: value } : category
+        )
+      );
+      // After setting the new category value to the correct position, eliminate all other sorts that have the same category name
+      setSortOrder((prevState) => prevState.filter((category) => (category.Category === value && category.id === sortOrder[index].id) || category.Category !== value));
+    }
+
+    const handleOrderTypeChange = (index,event) => {
+        const {value} = event.target;
+        console.log('Before update:', sortOrder);
+        setSortOrder((prevOrder) => 
+          prevOrder.map((category, i) =>
+            i === index ? { ...category, Order_Type: value } : category
+          )
+        );
+    }
+
+    const addSortCategory = () => {
+      const size = sortOrder.length;
+      setIDCounter((prevIDCounter) => prevIDCounter + 1);
+      let newID = idCounter;
+      if(size < 10){
+        let newSort = {
+          id: newID,
+          Category: "",
+          Order_Type: "DESC"
+        }
+        setSortOrder(prevState => [
+          ...prevState,
+          newSort
+        ])
+      }
+    }
+
+
+    const removeSortCategory = (index) => {
+      let ID = sortOrder[index].id;
+      console.log(sortOrder);
+        setSortOrder((prevOrder) => prevOrder.filter((category) => ID != category.id));
+    }
+
+
+    const sumbitSort = () => {
+      setSortOrder((prevOrder) => prevOrder.filter((category) => category.Category != ""));  //filter out the empty ones
+      if(tradeData == null)
+        return;
+      const nestedSort = (data,sortOrder) => {
+        return data.sort((a,b) => {
+          for(const criteria of sortOrder){
+            let Category = criteria.Category.toLowerCase(); 
+            const Order_Type = criteria.Order_Type;
+            const order = Order_Type === 'DESC' ? -1 : 1
+            
+
+            let valueA = a.Category;
+            let valueB = b.Category;
+
+            if (valueA === undefined || valueB === undefined) {
+              console.warn(`Field "${Category}" does not exist in the data.`);
+              continue;
+            }
+
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+              valueA = valueA.toLowerCase();
+              valueB = valueB.toLowerCase();
+            }
+
+            if (!isNaN(valueA) && !isNaN(valueB)) {
+              valueA = Number(valueA);
+              valueB = Number(valueB);
+            }
+
+            
+            if (valueA < valueB) return -1 * order;
+            if (valueA > valueB) return 1 * order;
+          }
+          return 0;
+        });
+      };
+      let data = nestedSort(tradeData, sortOrder);
+      console.log(data);
+    };
   return (
     <div>
           <div className='button-container'>
@@ -203,8 +304,51 @@ const USMap = () => {
           </MapContainer>
       </div>
       <div className='content-container'>
-        <h3 className='country-name'> United States arms sales to: {clickedCountryName}</h3>
-        <h3> </h3>
+        <h3 className='country-name'> United States arms sales to: {clickedCountryName}  <button className='sort-button' onClick={() => sortButton()} > Sort By</button> </h3>
+        { sortIsVisible &&
+          <div className='sortForm' >
+            Pick the sorting order:
+            <div>
+                  {sortOrder?.length > 0 ? (
+                    sortOrder.map((sortPair, index) => (
+                      <label key={index} className='sortForm'>
+                        Order # {index + 1}
+                        <select
+                          value={sortPair.Category}
+                          onChange={(event) => handleSortChange(event,index)}
+                          className='selectSortForm'
+                        >
+                          <option value=""></option>
+                          <option value="order_year">Order year</option>
+                          <option value="Ordered">Ordered</option>
+                          <option value="Designation">Designation</option>
+                          <option value="Description">Description</option>
+                          <option value="Category">Category</option>
+                          <option value="Delivered">Delivered</option>
+                          <option value="Delivery year/s">Delivery year/s</option>
+                          <option value="Comments">Comments</option>
+                          <option value="TIV per unit">TIV per unit</option>
+                          <option value="TIV total">TIV total</option>
+                        </select>
+                        <select
+                          value={sortPair.Order_Type}
+                          onChange={(event) => handleOrderTypeChange(index, event)}
+                          className='selectSortForm'
+                        >
+                          <option value="DESC">DESC</option>
+                          <option value="ASC">ASC</option>
+                        </select>
+                        <button onClick={() => removeSortCategory(index)}> Remove</button>
+                      </label>
+                    ))
+                  ) : (
+                    <p>No sort order available.</p>
+                  )}
+            </div>
+            <button onClick={addSortCategory}> Add sort category </button>
+            <button onClick={sumbitSort}> Submit</button>
+          </div>}
+
         <div>
         <table className="table table-hover">
                     <thead>
