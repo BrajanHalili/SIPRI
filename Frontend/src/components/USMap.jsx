@@ -243,13 +243,21 @@ const USMap = () => {
       const nestedSort = (data,sortOrder) => {
         return data.sort((a,b) => {
           for(const criteria of sortOrder){
-            let Category = criteria.Category.toLowerCase(); 
-            const Order_Type = criteria.Order_Type;
-            const order = Order_Type === 'DESC' ? -1 : 1
+            let Category = criteria.Category;   //Get category
+            const Order_Type = criteria.Order_Type;  //Get order type
+            const order = Order_Type === 'DESC' ? -1 : 1   //get value depending on order type
             
-
-            let valueA = a.Category;
-            let valueB = b.Category;
+            let valueA;
+            let valueB;
+            if(Category === "Armament_Category.armament_category"){   //check whether it is about armament category since that is data taken from a separate table
+              valueA = a.Armament_Category.armament_category;
+              valueB = b.Armament_Category.armament_category;
+            }
+            else {
+              valueA = a[Category];
+              valueB = b[Category];
+            }
+            
 
             if (valueA === undefined || valueB === undefined) {
               console.warn(`Field "${Category}" does not exist in the data.`);
@@ -273,8 +281,7 @@ const USMap = () => {
           return 0;
         });
       };
-      let data = nestedSort(tradeData, sortOrder);
-      console.log(data);
+      nestedSort(tradeData, sortOrder);
     };
   return (
     <div>
@@ -320,15 +327,15 @@ const USMap = () => {
                         >
                           <option value=""></option>
                           <option value="order_year">Order year</option>
-                          <option value="Ordered">Ordered</option>
-                          <option value="Designation">Designation</option>
-                          <option value="Description">Description</option>
-                          <option value="Category">Category</option>
-                          <option value="Delivered">Delivered</option>
-                          <option value="Delivery year/s">Delivery year/s</option>
-                          <option value="Comments">Comments</option>
-                          <option value="TIV per unit">TIV per unit</option>
-                          <option value="TIV total">TIV total</option>
+                          <option value="numbers_ordered">Ordered</option>
+                          <option value="designation">Designation</option>
+                          <option value="description">Description</option>
+                          <option value="Armament_Category.armament_category">Category</option>
+                          <option value="numbers_delivered">Delivered</option>
+                          <option value="delivery_year_s">Delivery year/s</option>
+                          <option value="comments">Comments</option>
+                          <option value="tiv_per_unit">TIV per unit</option>
+                          <option value="tiv_total_order">TIV total</option>
                         </select>
                         <select
                           value={sortPair.Order_Type}
