@@ -190,7 +190,7 @@ const USMap = () => {
 
     const handleSortChange = (event, index) => {
       const {value} = event.target;
-      console.log('Before update:', sortOrder);
+      //console.log('Before update:', sortOrder);
 
       setSortOrder((prevOrder) =>
         prevOrder.map((category, i) =>
@@ -203,7 +203,7 @@ const USMap = () => {
 
     const handleOrderTypeChange = (index,event) => {
         const {value} = event.target;
-        console.log('Before update:', sortOrder);
+        //console.log('Before update:', sortOrder);
         setSortOrder((prevOrder) => 
           prevOrder.map((category, i) =>
             i === index ? { ...category, Order_Type: value } : category
@@ -231,12 +231,12 @@ const USMap = () => {
 
     const removeSortCategory = (index) => {
       let ID = sortOrder[index].id;
-      console.log(sortOrder);
+      //console.log(sortOrder);
         setSortOrder((prevOrder) => prevOrder.filter((category) => ID != category.id));
     }
 
 
-    const sumbitSort = () => {
+    const submitSort = () => {
       setSortOrder((prevOrder) => prevOrder.filter((category) => category.Category != ""));  //filter out the empty ones
       if(tradeData == null)
         return;
@@ -283,6 +283,33 @@ const USMap = () => {
       };
       nestedSort(tradeData, sortOrder);
     };
+
+    const moveElement = (sortOrder, index, direction) => {
+      if (index < 0 || index >= sortOrder.length) {
+        console.warn('Invalid index: Index out of bounds.');
+        return sortOrder;
+      }
+
+      const newSortOrder = [...sortOrder];
+      const newIndex = direction === 'up' ? index - 1 : index + 1;
+
+      if(newIndex <0 || newIndex >= sortOrder.length){
+        console.warn('Invalid new index. Cannot move element.');
+        return sortOrder;
+      }
+
+      const [element] = newSortOrder.splice(index,1);
+      newSortOrder.splice(newIndex, 0, element);
+      return newSortOrder;
+    };
+
+    const handleMoveUp = (index) => {
+      setSortOrder((prevState) => moveElement(prevState,index,'up'));
+    };
+
+    const handleMoveDown = (index) => {
+      setSortOrder((prevState) => moveElement(prevState, index, 'down'));
+    }
   return (
     <div>
           <div className='button-container'>
@@ -313,13 +340,16 @@ const USMap = () => {
       <div className='content-container'>
         <h3 className='country-name'> United States arms sales to: {clickedCountryName}  <button className='sort-button' onClick={() => sortButton()} > Sort By</button> </h3>
         { sortIsVisible &&
-          <div className='sortForm' >
+          <div className='sort-order-container' >
             Pick the sorting order:
-            <div>
+            <div className="sort-order-item">
                   {sortOrder?.length > 0 ? (
                     sortOrder.map((sortPair, index) => (
-                      <label key={index} className='sortForm'>
-                        Order # {index + 1}
+                      <label key={index} className='sortForm selectSortForm'>
+                        <div className='order'>
+                          Order #{index + 1}
+                        </div>
+                        
                         <select
                           value={sortPair.Category}
                           onChange={(event) => handleSortChange(event,index)}
@@ -345,15 +375,52 @@ const USMap = () => {
                           <option value="DESC">DESC</option>
                           <option value="ASC">ASC</option>
                         </select>
-                        <button onClick={() => removeSortCategory(index)}> Remove</button>
+                        <div className="button-group">
+                          <button className="move-button" onClick={() => handleMoveUp(index)}   disabled={index === 0} title="Move Up">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" />
+                            </svg>
+                          </button>
+                          <button className="move-button" onClick={() => handleMoveDown(index)}   disabled={index === sortOrder.length - 1} title="Move Down">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" />
+                            </svg>
+                          </button>
+                          <button className="remove-button" onClick={() => removeSortCategory(index)}>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              fill="currentColor"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                          </button>
+                        </div>
+
                       </label>
                     ))
                   ) : (
                     <p>No sort order available.</p>
                   )}
             </div>
-            <button onClick={addSortCategory}> Add sort category </button>
-            <button onClick={sumbitSort}> Submit</button>
+            <div className='button-group'>
+              <button className='add-button' onClick={addSortCategory}> Add category </button>
+              <button className='submit-button' onClick={submitSort}> Submit</button>
+            </div>
           </div>}
 
         <div>
