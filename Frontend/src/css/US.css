@@ -53,3 +53,113 @@
   text-align: center;
   position:sticky;
 }
+
+.sort-button{
+  position: absolute;
+  right: 0px;
+  font-size:medium;
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 5px 5px; /* Add some spacing between buttons */
+}
+
+.sortForm {
+  display: flex;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* Category and Order Type input fields */
+.selectSortForm {
+  background-color: #ffffff; /* White background */
+  color: #333; /* Dark text for contrast */
+  border: 1px solid #007bff; /* Light blue border */
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  margin: 5px 0; /* Add some spacing between inputs */
+  appearance: none; /* Remove default arrow in some browsers */
+  -webkit-appearance: none; /* Remove default arrow in Safari */
+  -moz-appearance: none; /* Remove default arrow in Firefox */
+}
+
+/* Hover effect */
+.selectSortForm:hover {
+  border-color: #0056b3; /* Darker blue border on hover */
+}
+
+/* Focus effect */
+.selectSortForm:focus {
+  outline: none; /* Remove default outline */
+  border-color: #007bff; /* Light blue border */
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* Light blue glow */
+}
+
+/* Disabled state */
+.selectSortForm:disabled {
+  background-color: #f0f0f0; /* Light gray background for disabled state */
+  border-color: #cccccc; /* Gray border for disabled state */
+  cursor: not-allowed; /* Change cursor to indicate disabled state */
+}
+
+.sort-order-container {
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #e6f7ff; /* Light blue background */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sort-order-item {
+  justify-content: space-between;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #ffffff; /* White background for items */
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-group {
+  margin-left: 8px;
+  display: flex;
+  gap: 8px; /* Space between buttons */
+}
+
+.move-button,
+.remove-button, .add-button, .submit-button {
+  background-color: #007bff; /* Blue background */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.move-button:hover,
+.remove-button:hover, .add-button:hover, .submit-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.move-button:active,
+.remove-button:active {
+  background-color: #004080; /* Even darker blue on click */
+}
+
+.move-button i,
+.remove-button i, .add-button i, .submit-button i{
+  font-size: 14px;
+}
+
+.order {
+  margin-top: 15px;
+  margin-right: 10px;
+}

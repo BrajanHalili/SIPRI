@@ -32,7 +32,7 @@ You may also see any lint errors in the console.
 * CSV Files
   * If you don't have Arms_Registers database, then the script will create it.
   * The necessary tables will be created, and data will be inserted the first time Arms_Registers is created.
-  * If there is any issue, delete the database and do npm start.
+  * If there is any issue, delete the database and redo 'npm start' in the Backend folder.
 
 * Website overview:
   * Interactive map - Click a country to see the data. No need to add countries by typing their names

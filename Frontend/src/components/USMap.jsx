@@ -26,6 +26,15 @@ const USMap = () => {
       [85, 180] // Northeast corner of the world (latitude, longitude)
     ];
     const [tradeData, setTradeData] = useState();
+    const [idCounter, setIDCounter] = useState(2);
+    const [sortOrder, setSortOrder] = useState([
+      {
+        id: 1,
+        Category: "order_year", 
+        Order_Type: "DESC"
+      }
+    ]);
+    const [sortIsVisible, setSortIsVisible] = useState(false)
 
   const position = [51.505, -0.09]; // Example coordinates for the map center
   const countryStyle = {
@@ -175,6 +184,132 @@ const USMap = () => {
       }
     };
 
+    const sortButton = () => {
+        setSortIsVisible(!sortIsVisible);
+    }
+
+    const handleSortChange = (event, index) => {
+      const {value} = event.target;
+      //console.log('Before update:', sortOrder);
+
+      setSortOrder((prevOrder) =>
+        prevOrder.map((category, i) =>
+          i === index ? { ...category, Category: value } : category
+        )
+      );
+      // After setting the new category value to the correct position, eliminate all other sorts that have the same category name
+      setSortOrder((prevState) => prevState.filter((category) => (category.Category === value && category.id === sortOrder[index].id) || category.Category !== value));
+    }
+
+    const handleOrderTypeChange = (index,event) => {
+        const {value} = event.target;
+        //console.log('Before update:', sortOrder);
+        setSortOrder((prevOrder) => 
+          prevOrder.map((category, i) =>
+            i === index ? { ...category, Order_Type: value } : category
+          )
+        );
+    }
+
+    const addSortCategory = () => {
+      const size = sortOrder.length;
+      setIDCounter((prevIDCounter) => prevIDCounter + 1);
+      let newID = idCounter;
+      if(size < 10){
+        let newSort = {
+          id: newID,
+          Category: "",
+          Order_Type: "DESC"
+        }
+        setSortOrder(prevState => [
+          ...prevState,
+          newSort
+        ])
+      }
+    }
+
+
+    const removeSortCategory = (index) => {
+      let ID = sortOrder[index].id;
+      //console.log(sortOrder);
+        setSortOrder((prevOrder) => prevOrder.filter((category) => ID != category.id));
+    }
+
+
+    const submitSort = () => {
+      setSortOrder((prevOrder) => prevOrder.filter((category) => category.Category != ""));  //filter out the empty ones
+      if(tradeData == null)
+        return;
+      const nestedSort = (data,sortOrder) => {
+        return data.sort((a,b) => {
+          for(const criteria of sortOrder){
+            let Category = criteria.Category;   //Get category
+            const Order_Type = criteria.Order_Type;  //Get order type
+            const order = Order_Type === 'DESC' ? -1 : 1   //get value depending on order type
+            
+            let valueA;
+            let valueB;
+            if(Category === "Armament_Category.armament_category"){   //check whether it is about armament category since that is data taken from a separate table
+              valueA = a.Armament_Category.armament_category;
+              valueB = b.Armament_Category.armament_category;
+            }
+            else {
+              valueA = a[Category];
+              valueB = b[Category];
+            }
+            
+
+            if (valueA === undefined || valueB === undefined) {
+              console.warn(`Field "${Category}" does not exist in the data.`);
+              continue;
+            }
+
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+              valueA = valueA.toLowerCase();
+              valueB = valueB.toLowerCase();
+            }
+
+            if (!isNaN(valueA) && !isNaN(valueB)) {
+              valueA = Number(valueA);
+              valueB = Number(valueB);
+            }
+
+            
+            if (valueA < valueB) return -1 * order;
+            if (valueA > valueB) return 1 * order;
+          }
+          return 0;
+        });
+      };
+      nestedSort(tradeData, sortOrder);
+    };
+
+    const moveElement = (sortOrder, index, direction) => {
+      if (index < 0 || index >= sortOrder.length) {
+        console.warn('Invalid index: Index out of bounds.');
+        return sortOrder;
+      }
+
+      const newSortOrder = [...sortOrder];
+      const newIndex = direction === 'up' ? index - 1 : index + 1;
+
+      if(newIndex <0 || newIndex >= sortOrder.length){
+        console.warn('Invalid new index. Cannot move element.');
+        return sortOrder;
+      }
+
+      const [element] = newSortOrder.splice(index,1);
+      newSortOrder.splice(newIndex, 0, element);
+      return newSortOrder;
+    };
+
+    const handleMoveUp = (index) => {
+      setSortOrder((prevState) => moveElement(prevState,index,'up'));
+    };
+
+    const handleMoveDown = (index) => {
+      setSortOrder((prevState) => moveElement(prevState, index, 'down'));
+    }
   return (
     <div>
           <div className='button-container'>
@@ -203,8 +338,91 @@ const USMap = () => {
           </MapContainer>
       </div>
       <div className='content-container'>
-        <h3 className='country-name'> United States arms sales to: {clickedCountryName}</h3>
-        <h3> </h3>
+        <h3 className='country-name'> United States arms sales to: {clickedCountryName}  <button className='sort-button' onClick={() => sortButton()} > Sort By</button> </h3>
+        { sortIsVisible &&
+          <div className='sort-order-container' >
+            Pick the sorting order:
+            <div className="sort-order-item">
+                  {sortOrder?.length > 0 ? (
+                    sortOrder.map((sortPair, index) => (
+                      <label key={index} className='sortForm selectSortForm'>
+                        <div className='order'>
+                          Order #{index + 1}
+                        </div>
+                        
+                        <select
+                          value={sortPair.Category}
+                          onChange={(event) => handleSortChange(event,index)}
+                          className='selectSortForm'
+                        >
+                          <option value=""></option>
+                          <option value="order_year">Order year</option>
+                          <option value="numbers_ordered">Ordered</option>
+                          <option value="designation">Designation</option>
+                          <option value="description">Description</option>
+                          <option value="Armament_Category.armament_category">Category</option>
+                          <option value="numbers_delivered">Delivered</option>
+                          <option value="delivery_year_s">Delivery year/s</option>
+                          <option value="comments">Comments</option>
+                          <option value="tiv_per_unit">TIV per unit</option>
+                          <option value="tiv_total_order">TIV total</option>
+                        </select>
+                        <select
+                          value={sortPair.Order_Type}
+                          onChange={(event) => handleOrderTypeChange(index, event)}
+                          className='selectSortForm'
+                        >
+                          <option value="DESC">DESC</option>
+                          <option value="ASC">ASC</option>
+                        </select>
+                        <div className="button-group">
+                          <button className="move-button" onClick={() => handleMoveUp(index)}   disabled={index === 0} title="Move Up">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" />
+                            </svg>
+                          </button>
+                          <button className="move-button" onClick={() => handleMoveDown(index)}   disabled={index === sortOrder.length - 1} title="Move Down">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" />
+                            </svg>
+                          </button>
+                          <button className="remove-button" onClick={() => removeSortCategory(index)}>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              fill="currentColor"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                          </button>
+                        </div>
+
+                      </label>
+                    ))
+                  ) : (
+                    <p>No sort order available.</p>
+                  )}
+            </div>
+            <div className='button-group'>
+              <button className='add-button' onClick={addSortCategory}> Add category </button>
+              <button className='submit-button' onClick={submitSort}> Submit</button>
+            </div>
+          </div>}
+
         <div>
         <table className="table table-hover">
                     <thead>
