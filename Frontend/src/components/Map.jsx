@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import '../css/US.css';
 
 
-const USMap = () => {
+const Map = (supplier) => {
     const [geoData, setGeoData] = useState(null);
     const [clickedCountryName, setClickedCountryName] = useState(null);
     const [hoveredCountryName, setHoveredCountryName] = useState(null);
@@ -76,7 +76,7 @@ const USMap = () => {
     useEffect(() => {
         async function fetchGeoData() {
             try {
-            const response = await fetch('http://localhost:3006/USA/');
+            const response = await fetch('http://localhost:3006/' + supplier.supplier + '/');
             //console.log(response);  // Inspect the entire response object
             if(!response.ok) {
                 console.error('Server error:', response.status, response.statusText);
@@ -94,7 +94,7 @@ const USMap = () => {
   const handleCountryClick = async (country) => {
     async function fetchWeaponNumbers() {
       try {
-        const response = await fetch('http://localhost:3006/USA/' + country);
+        const response = await fetch('http://localhost:3006/' + supplier.supplier + '/' + country);
         if(!response.ok){
           console.error('Server error', response.status, response.statusText);
           return;
@@ -162,7 +162,7 @@ const USMap = () => {
       if(country != null){
         async function fetchTradeData(category) {
           try {
-            let link = 'http://localhost:3006/USA/' + country + '/' + category;
+            let link = 'http://localhost:3006/' + supplier.supplier + '/' + country + '/' + category;
             //console.log(link);
           const response = await fetch(link);
 
@@ -468,4 +468,4 @@ const USMap = () => {
   );
 };
 
-export default USMap;
+export default Map;

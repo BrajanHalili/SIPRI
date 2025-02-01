@@ -9,7 +9,7 @@ const { Op, Sequelize } = require('sequelize');
 TradeRecord.belongsTo(Armament_Categories, {foreignKey: 'description'});
 Armament_Categories.hasMany(TradeRecord, {foreignKey: 'description'});
 
-router.get('/', async (req, res) => {
+router.get('/:supplier', async (req, res) => {
     try {
         const countries = await WorldCountry.findAll({
             attributes: [
@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
               [Op.and] : [
                 db.where(db.fn('ST_IsValid', db.col('geom')), true), // Filter valid geometries
                 {name_long :{
-                  [Op.ne] : 'United States'
+                  [Op.ne] : req.params.supplier
                   }
                 }
               ]
@@ -49,13 +49,13 @@ router.get('/', async (req, res) => {
         }
     });
 
-    router.get('/:country/:category', async (req, res) => {
+    router.get('/:supplier/:country/:category', async (req, res) => {
       try {
         if(req.params.category == "All"){
           let TradeRecords = await TradeRecord.findAll({
             where: {
               recipient: req.params.country,
-              supplier: 'United States',
+              supplier: req.params.supplier,
             }, 
             include: [
             {
@@ -96,7 +96,7 @@ router.get('/', async (req, res) => {
                     }),
                     {
                       recipient: req.params.country,
-                      supplier: 'United States',
+                      supplier: req.params.supplier,
                     }
                   ]
             }, 
@@ -125,7 +125,7 @@ router.get('/', async (req, res) => {
         }
     });
 
-    router.get('/:country', async (req, res) => {
+    router.get('/:supplier/:country', async (req, res) => {
       try {
         const CategoryNumbers = await TradeRecord.findAll({
           attributes:[
@@ -141,7 +141,7 @@ router.get('/', async (req, res) => {
           ],
           where:[{
             recipient: req.params.country,
-            supplier: 'United States'
+            supplier: req.params.supplier
           }],
           order: [
             ['armament_category', 'ASC']
