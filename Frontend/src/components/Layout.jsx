@@ -10,8 +10,11 @@ const Layout = () => {
                     <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <NavLink className="nav-link" to="/United States" exact>United States</NavLink>                            
-                                </li>
+                                <NavLink className="nav-link" to="/United States" exact>United States</NavLink>                          
+                            </li>
+                            <li>
+                                <NavLink className="nav-link" to="/Russia" exact>Russia</NavLink> 
+                            </li>
                         </ul>
                     </div>
                 </div>

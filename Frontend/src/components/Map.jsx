@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import '../css/US.css';
+import '../css/Country.css';
 
 
 const Map = (supplier) => {
@@ -338,7 +338,7 @@ const Map = (supplier) => {
           </MapContainer>
       </div>
       <div className='content-container'>
-        <h3 className='country-name'> United States arms sales to: {clickedCountryName}  <button className='sort-button' onClick={() => sortButton()} > Sort By</button> </h3>
+        <h3 className='country-name'> {supplier.supplier} arms sales to: {clickedCountryName}  <button className='sort-button' onClick={() => sortButton()} > Sort By</button> </h3>
         { sortIsVisible &&
           <div className='sort-order-container' >
             Pick the sorting order:
