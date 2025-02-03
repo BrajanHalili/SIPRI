@@ -153,3 +153,42 @@ multi-role radar,Sensors
 SLBM,Missiles
 nuclear reactor,Other
 airship,Aircraft
+SSM TEL,Other
+AEW helicopter,Aircraft
+anti-ship/anti-radar missile,Missiles
+naval mine/torpedo,Missiles
+recce satellite,Other
+anti-radar missile/ASM,Missiles
+training ship,Ships
+replenishment tanker,Ships
+transport ship,Ships
+OPV/transport ship,Ships
+support/landing ship,Ships
+landing/patrol craft,Ships
+ASW mortar,Naval weapons
+turboprop,Engines
+anti-ship helicopter,Aircraft
+AEV/ARV,Armoured vehicles
+multi-function radar,Sensors
+self-propelled AA gun turret,Air defence systems
+target tow aircraft,Aircraft
+Naval EO system,Sensors
+ASW Helicopter,Aircraft
+air/ground surv radar,Sensors
+SIGINT helicopter,Aircraft
+naval MRL,Naval weapons
+surveillance satellite,Other
+AGS/MP aircraft radar,Sensors
+transport/trainer aircraft,Aircraft
+cargo craft,Aircraft
+AIP engine,Engines
+EO system,Sensors
+SPG turret,Other
+APC/CP,Armoured vehicles
+AMV,Armoured vehicles
+anti-ship missile/ASM/SAM,Missiles
+AA gun system,Air defence systems
+SIGINT ship,Ships
+ABM/SAM system,Air defence systems
+mortar turret,Other
+SSB,Ships
