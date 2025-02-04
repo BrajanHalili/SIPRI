@@ -289,7 +289,7 @@ const main = async () => {
   }))
   app.use(express.json());
   
-  app.use('/USA', require('./routes/usa.js'));
+  app.use('/', require('./routes/country.js'));
   
   app.listen(3006, () => {
       console.log("server running");

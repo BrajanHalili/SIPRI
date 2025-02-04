@@ -1,10 +1,9 @@
 import React from 'react'
-import {NavLink } from 'react-router-dom'
-import USMap from "../components/USMap"
+import Map from "../components/Map"
 
 const USRegister = () => {
     return (
-        <USMap/>
+        <Map supplier="United States"></Map>
     )
 }
 

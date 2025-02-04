@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import '../css/US.css';
+import '../css/Country.css';
 
 
-const USMap = () => {
+const Map = (supplier) => {
     const [geoData, setGeoData] = useState(null);
     const [clickedCountryName, setClickedCountryName] = useState(null);
     const [hoveredCountryName, setHoveredCountryName] = useState(null);
@@ -76,7 +76,7 @@ const USMap = () => {
     useEffect(() => {
         async function fetchGeoData() {
             try {
-            const response = await fetch('http://localhost:3006/USA/');
+            const response = await fetch('http://localhost:3006/' + supplier.supplier + '/');
             //console.log(response);  // Inspect the entire response object
             if(!response.ok) {
                 console.error('Server error:', response.status, response.statusText);
@@ -94,7 +94,7 @@ const USMap = () => {
   const handleCountryClick = async (country) => {
     async function fetchWeaponNumbers() {
       try {
-        const response = await fetch('http://localhost:3006/USA/' + country);
+        const response = await fetch('http://localhost:3006/' + supplier.supplier + '/' + country);
         if(!response.ok){
           console.error('Server error', response.status, response.statusText);
           return;
@@ -162,7 +162,7 @@ const USMap = () => {
       if(country != null){
         async function fetchTradeData(category) {
           try {
-            let link = 'http://localhost:3006/USA/' + country + '/' + category;
+            let link = 'http://localhost:3006/' + supplier.supplier + '/' + country + '/' + category;
             //console.log(link);
           const response = await fetch(link);
 
@@ -219,7 +219,7 @@ const USMap = () => {
         let newSort = {
           id: newID,
           Category: "",
-          Order_Type: "DESC"
+          Order_Type: "DESCENDING"
         }
         setSortOrder(prevState => [
           ...prevState,
@@ -245,7 +245,7 @@ const USMap = () => {
           for(const criteria of sortOrder){
             let Category = criteria.Category;   //Get category
             const Order_Type = criteria.Order_Type;  //Get order type
-            const order = Order_Type === 'DESC' ? -1 : 1   //get value depending on order type
+            const order = Order_Type === 'DESCENDING' ? -1 : 1   //get value depending on order type
             
             let valueA;
             let valueB;
@@ -257,11 +257,57 @@ const USMap = () => {
               valueA = a[Category];
               valueB = b[Category];
             }
-            
 
             if (valueA === undefined || valueB === undefined) {
               console.warn(`Field "${Category}" does not exist in the data.`);
               continue;
+            }
+
+            //Fixes the three bugs with the '?' by taking '?' out of the comparison
+            if(Category === 'numbers_delivered'){
+              if(valueA.endsWith('?')){
+                valueA = valueA.slice(0,valueA.length-1);
+              }
+              if(valueB.endsWith('?')){
+                valueB = valueB.slice(0,valueB.length-1);
+              }
+                valueA = parseInt(valueA);
+                valueB = parseInt(valueB);
+            }
+            else if(Category === 'numbers_ordered'){
+              if(valueA.endsWith('?')){
+                valueA = valueA.slice(0,valueA.length-1);
+              }
+              if(valueB.endsWith('?')){
+                valueB = valueB.slice(0,valueB.length-1);
+              }
+                valueA = parseInt(valueA);
+                valueB = parseInt(valueB);
+            }
+            else if(Category === 'order_year'){
+              if(valueA.endsWith('?')){
+                valueA = valueA.slice(0,valueA.length-1);
+              }
+              if(valueB.endsWith('?')){
+                valueB = valueB.slice(0,valueB.length-1);
+              }
+                valueA = parseInt(valueA);
+                valueB = parseInt(valueB);
+            }
+            else if(Category === 'comments'){   //Fixes the sort for comments by comparing length of comment instead of alphabetic sort
+              if(valueA != null){
+                valueA = valueA.length;                
+              }
+              else{
+                valueA = 0;
+              }
+              
+              if(valueB != null){
+                valueB = valueB.length;                
+              }
+              else {
+                valueB = 0;
+              }
             }
 
             if (typeof valueA === 'string' && typeof valueB === 'string') {
@@ -338,7 +384,7 @@ const USMap = () => {
           </MapContainer>
       </div>
       <div className='content-container'>
-        <h3 className='country-name'> United States arms sales to: {clickedCountryName}  <button className='sort-button' onClick={() => sortButton()} > Sort By</button> </h3>
+        <h3 className='country-name'> {supplier.supplier} arms sales to: {clickedCountryName}  <button className='sort-button' onClick={() => sortButton()} > Sort By</button> </h3>
         { sortIsVisible &&
           <div className='sort-order-container' >
             Pick the sorting order:
@@ -372,8 +418,8 @@ const USMap = () => {
                           onChange={(event) => handleOrderTypeChange(index, event)}
                           className='selectSortForm'
                         >
-                          <option value="DESC">DESC</option>
-                          <option value="ASC">ASC</option>
+                          <option value="DESCENDING">DESCENDING</option>
+                          <option value="ASCENDING">ASCENDING</option>
                         </select>
                         <div className="button-group">
                           <button className="move-button" onClick={() => handleMoveUp(index)}   disabled={index === 0} title="Move Up">
@@ -468,4 +514,4 @@ const USMap = () => {
   );
 };
 
-export default USMap;
+export default Map;
