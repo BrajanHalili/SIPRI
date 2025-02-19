@@ -8,12 +8,11 @@ In the project directory, you can run:
 ### `npm i`
   
 Install the needed modules in /Frontend to run the website.
-You need to run 
 
 ### `npm start`
 
 Runs the app in the development mode.\
-Use the command in both /Backend and /Frontend. 
+Use the command in both /Backend and /Frontend.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
