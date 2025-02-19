@@ -48,7 +48,7 @@ You may also see any lint errors in the console.
   * Armament category - Click each button to see the specific data for that category
   * Sorted table - The table is sorted by order year and then armament category by default.
   * Advanced sort option - Click sort to see an interface where all table columns can be inserted in the desired sort order and sort type (ascending or descending).
-<img src='./Gifs and photos/SIPRI.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='./Frontend/Gifs and photos/SIPRI gif.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 * The data is updated until January 2025.
 * The frontend is built with React and React Router.
