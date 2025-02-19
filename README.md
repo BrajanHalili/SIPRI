@@ -12,6 +12,7 @@ Install the needed modules in /Frontend to run the website.
 ### `npm start`
 
 Runs the app in the development mode.\
+Need to create the .env file (show below in the About section) so that the backend can work with PostgreSQL.\
 Use the command in both /Backend and /Frontend.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
@@ -28,7 +29,7 @@ You may also see any lint errors in the console.
 <img src='./Frontend/Gifs and photos/SIPRI Website Screenshot.png' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 * .env file
-  * Enter the following data for the PostgreSQL in a .env file:
+  * Enter the following data for the PostgreSQL in a .env file in /Backend:
     * user = ""
     * password = ""
     * host = ""
