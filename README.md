@@ -50,7 +50,7 @@ You may also see any lint errors in the console.
   * Advanced sort option - Click sort to see an interface where all table columns can be inserted in the desired sort order and sort type (ascending or descending).
 <img src='./Gifs and photos/SIPRI.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-* The data is updated until September 2024.
+* The data is updated until January 2025.
 * The frontend is built with React and React Router.
 * The backend is built with PostgreSQL, ExpressJS, Sequelize, and NodeJS.
 
