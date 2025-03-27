@@ -509,7 +509,7 @@ const Map = (supplier) => {
     All sources taken from <a href="https://www.sipri.org/">Stockholm International Peace Research Institute (SIPRI)</a>. <br></br>
     Per SPIRI: SIPRI trend-indicator values (TIVs) are in millions. A '?' in a column indicates uncertain data. Data retrieved on January 2025. <br></br>
     A '0' for 'SIPRI TIV of delivered weapons' indicates that the volume of deliveries is between 0 and 0.5 million SIPRI TIV; and an empty field indicates that no deliveries have been identified. <br></br>
-
+    This is a private initiative which is neither created nor maintained by SIPRI. <br></br>
     </p>
     </div>
   );
