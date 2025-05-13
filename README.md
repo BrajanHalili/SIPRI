@@ -53,4 +53,4 @@ You may also see any lint errors in the console.
 * The data is updated until January 2025.
 * The frontend is built with React and React Router.
 * The backend is built with PostgreSQL, ExpressJS, Sequelize, and NodeJS.
-
+* Link to the online website: http://18.212.245.31/
